@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+    <meta charset="UTF-8">
+    <title>
+        InstaBook |
+        {% block title %}
+        {% endblock title %}
+    </title>
+</head>
+<body>
+
+{% include 'main/navbar.html' %}
+
+{% block content %}
+{% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}
+
+<!-- Custom JS -->
+<script src="{% static 'main.js' %}"></script>
+
+</body>
+</html>
