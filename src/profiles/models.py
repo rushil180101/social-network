@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from .utils import get_random_code
+from posts.models import Post
 
 
 class Profile(models.Model):
@@ -30,6 +31,25 @@ class Profile(models.Model):
     # Function to get total number of friends.
     def get_friends_count(self):
         return self.friends.all().count()
+
+    # Function to get the queryset of posts associated with the logged in user-profile.
+    def get_posts(self):
+        # Approach - 1
+        # posts = Post.objects.filter(author=self.user)
+        # return posts
+
+        # Approach - 2 : 'post_set' can be used because we have a reverse relation in Post model.
+        # return self.post_set.all()
+
+        # Approach - 3 : 'posts' can be used directly instead of 'post_set' because we have mentioned
+        # (..., related_name='posts') in the field containing reverse relation in the Post model.
+        return self.posts.all()
+
+    # Function to get the number of posts associated with the logged in user-profile.
+    def get_posts_count(self):
+        # Approaches mentioned in the above function 'get_posts()' can be used here as well.
+        # Approach - 3
+        return self.posts.all().count()
 
     def __str__(self):
         return str(self.user.username)
