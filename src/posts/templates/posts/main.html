@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Posts
+{% endblock title %}
+
+
+{% block content %}
+
+    {% for post in posts_qs %}
+        <h4>{{post.author}}</h4><br>
+        <img src="{% static '{{post.image.url}}' %}">
+        <p>{{post.content}}</p><br>
+        <hr>
+    {% endfor %}
+
+{% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}
