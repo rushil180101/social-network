@@ -9,3 +9,5 @@ def all_posts_view(request):
         'posts_qs': posts_qs,
     }
     return render(request, 'posts/main.html', context)
+# Note: The above function all_posts_view() can also be implemented with Django ListView
+
