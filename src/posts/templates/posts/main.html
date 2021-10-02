@@ -16,10 +16,18 @@ Posts
                 <img src="{% static '{{post.image.url}}' %}">
                 <p>{{post.content}}</p><br>
 
-                <form method="post" action="">
+                <form method="post" action="{% url 'like-unlike-post' %}">
+                    {% csrf_token %}
                     <input type="hidden" name="post_id" value="{{post.id}}">
+
+                    {% if profile not in post.liked_by.all %}
                     <button type="submit" class="btn btn-primary">Like</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-primary">Unlike</button>
+                    {% endif %}
                 </form>
+
+                <p>Total likes : {{post.likes}}</p>
                 <hr>
             {% endfor %}
 
@@ -28,6 +36,7 @@ Posts
         <div class="col-md-4">
 
             <h1>New Post form</h1>
+            <h2>For user: {{request.user}}</h2>
 
         </div>
 
