@@ -1,15 +1,32 @@
 from django.shortcuts import render, redirect
 from .models import *
 from profiles.models import Profile
+from .forms import PostModelForm
 
 
 def all_posts_view(request):
     posts_qs = Post.objects.all()
     logged_in_user_profile = Profile.objects.get(user=request.user)
 
+    # Form for creating new post by the logged in user.
+    new_post_form = PostModelForm()
+
+    if request.method == 'POST':
+        new_post_form = PostModelForm(request.POST, request.FILES)
+        if new_post_form.is_valid():
+            # Before saving the new post, we want to assign its author as the current logged in user.
+            # Thus, to prevent automatic save, we pass the parameter commit=False as follows.
+            instance = new_post_form.save(commit=False)
+            instance.author = logged_in_user_profile
+            instance.save()
+
+            # Create new empty form once the old post form is submitted and saved.
+            new_post_form = PostModelForm()
+
     context = {
         'posts_qs': posts_qs,
         'profile': logged_in_user_profile,
+        'new_post_form': new_post_form,
     }
     return render(request, 'posts/main.html', context)
 # Note: The above function all_posts_view() can also be implemented with Django ListView

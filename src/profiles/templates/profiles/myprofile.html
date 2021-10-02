@@ -36,7 +36,7 @@ My Profile
     <br>
     <div id="update-form" style="visibility:hidden">
         <hr color="red">
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{profile_update_form.as_p}}
             <br>
