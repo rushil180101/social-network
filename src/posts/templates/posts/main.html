@@ -13,7 +13,13 @@ Posts
 
             {% for post in posts_qs %}
                 <h4>{{post.author}}</h4><br>
-                <img src="{% static '{{post.image.url}}' %}">
+                {{post.created|timesince}} ago <br>
+                {% ifequal request.user post.author.user %}
+                    <a href=""><button class="btn btn-dark">Update</button></a>&nbsp;&nbsp;
+                    <a href=""><button class="btn btn-dark">Delete</button></a>&nbsp;&nbsp;
+                {% endifequal %}
+                <br>
+<!--                <img src="post.image.url" alt="post image">-->
                 <p>{{post.content}}</p><br>
 
                 <form method="post" action="{% url 'like-unlike-post' %}">
@@ -30,13 +36,21 @@ Posts
                 <p>Total likes : {{post.likes}}</p>
 
                 {% if post.comment_set.exists %}
-                <h4>Comments</h4>
+                <button class="btn btn-secondary" id="comments-toggle-btn">Show/Hide comments</button>
+<!--                <div class="row" style="border:solid black 1px;">-->
+<!--                    <div id="comment-box" class="col-md-4">-->
+                    <section id="comment-box" style="display:none">
+                    <h4>Comments</h4>
 
-                    {% for comment in post.comment_set.all %}
-                        <p><strong>{{comment.user}}</strong> ---> {{comment.body}}</p><br>
-                    {% endfor %}
+                        {% for comment in post.comment_set.all %}
+                            <p><strong>{{comment.user}}</strong> ---> {{comment.body}}</p><br>
+                        {% endfor %}
 
-                {% endif %}
+                    {% endif %}
+                    </section>
+<!--                    </div>-->
+<!--                </div>-->
+
 
                 <form action="{% url 'submit-new-comment' %}" method="post">
                     {% csrf_token %}
@@ -68,4 +82,18 @@ Posts
 
 
 {% block scripts %}
+<script>
+    button = document.getElementById('comments-toggle-btn');
+    button.addEventListener("click", function () {
+        comment_box = document.getElementById('comment-box');
+        if (comment_box.style.display == "none")
+        {
+            comment_box.style.display = "block";
+        }
+        else <!-- if (comment_box.style.display == "block") -->
+        {
+            comment_box.style.display = "none"
+        }
+    });
+</script>
 {% endblock scripts %}
