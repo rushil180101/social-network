@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Update Post
+{% endblock title %}
+
+
+{% block content %}
+<h3>Update Post</h3>
+<hr>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
+{% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}

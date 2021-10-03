@@ -15,8 +15,8 @@ Posts
                 <h4>{{post.author}}</h4><br>
                 {{post.created|timesince}} ago <br>
                 {% ifequal request.user post.author.user %}
-                    <a href=""><button class="btn btn-dark">Update</button></a>&nbsp;&nbsp;
-                    <a href=""><button class="btn btn-dark">Delete</button></a>&nbsp;&nbsp;
+                    <a href="{% url 'update-post' post.pk %}"><button class="btn btn-dark">Update</button></a>&nbsp;&nbsp;
+                    <a href="{% url 'delete-post' post.pk %}"><button class="btn btn-dark">Delete</button></a>&nbsp;&nbsp;
                 {% endifequal %}
                 <br>
 <!--                <img src="post.image.url" alt="post image">-->

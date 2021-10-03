@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from .models import *
 from profiles.models import Profile
 from .forms import *
+from django.views.generic import UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.contrib import messages
 
 
 def all_posts_view(request):
@@ -86,3 +89,32 @@ def create_post(request):
             instance.save()
 
     return redirect('main-posts-view')
+
+
+# We use generic views so that the post cannot be deleted/updated directly using the url.
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'posts/confirm_delete.html'
+    success_url = reverse_lazy('main-posts-view')
+
+    def get_object(self, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        obj = Post.objects.get(pk=pk)
+        if not obj.author.user == self.request.user:
+            messages.warning(self.request, 'You are not authorized to delete this post.')
+        return obj
+
+
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostModelForm
+    template_name = 'posts/update.html'
+    success_url = reverse_lazy('main-posts-view')
+
+    def form_valid(self, form):
+        logged_in_user_profile = Profile.objects.get(user=self.request.user)
+        if form.instance.author == logged_in_user_profile:
+            return super().form_valid(form)
+        else:
+            form.add_error(None, 'You are not authorized to update this post.')
+            return super().form_invalid(form)
