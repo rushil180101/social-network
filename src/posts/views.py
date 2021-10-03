@@ -14,32 +14,6 @@ def all_posts_view(request):
     # Form for creating new comments on the posts by the logged in user.
     new_comment_form = CommentModelForm()
 
-    if request.method == 'POST':
-        # Handle Post form submission
-        if 'submit_post_form' in request.POST:
-            new_post_form = PostModelForm(request.POST, request.FILES)
-            if new_post_form.is_valid():
-                # Before saving the new post, we want to assign its author as the current logged in user.
-                # Thus, to prevent automatic save, we pass the parameter commit=False as follows.
-                instance = new_post_form.save(commit=False)
-                instance.author = logged_in_user_profile
-                instance.save()
-
-                # Create new empty form once the old post form is submitted and saved.
-                new_post_form = PostModelForm()
-
-        # Handle Comment form submission
-        if 'submit_comment_form' in request.POST:
-            new_comment_form = CommentModelForm(request.POST)
-            if new_comment_form.is_valid():
-                instance = new_comment_form.save(commit=False)
-                instance.user = logged_in_user_profile
-                instance.post = Post.objects.get(id=request.POST.get('post_id'))
-                instance.save()
-
-                # Create new empty form once the old one is submitted.
-                new_comment_form = CommentModelForm()
-
     context = {
         'posts_qs': posts_qs,
         'profile': logged_in_user_profile,
@@ -47,7 +21,6 @@ def all_posts_view(request):
         'new_comment_form': new_comment_form,
     }
     return render(request, 'posts/main.html', context)
-# Note: The above function all_posts_view() can also be implemented with Django ListView
 
 
 def like_unlike_post(request):
@@ -78,5 +51,38 @@ def like_unlike_post(request):
         like_obj.save()
         post.save()
         return redirect('main-posts-view')
+
+    return redirect('main-posts-view')
+
+
+def submit_new_comment(request):
+
+    if request.method == 'POST':
+        logged_in_user_profile = Profile.objects.get(user=request.user)
+
+        # Handle Comment form submission.
+        new_comment_form = CommentModelForm(request.POST)
+        if new_comment_form.is_valid():
+            instance = new_comment_form.save(commit=False)
+            instance.user = logged_in_user_profile
+            instance.post = Post.objects.get(id=request.POST.get('post_id'))
+            instance.save()
+
+    return redirect('main-posts-view')
+
+
+def create_post(request):
+
+    if request.method == 'POST':
+        logged_in_user_profile = Profile.objects.get(user=request.user)
+
+        # Handle Post form submission.
+        new_post_form = PostModelForm(request.POST, request.FILES)
+        if new_post_form.is_valid():
+            # Before saving the new post, we want to assign its author as the current logged in user.
+            # Thus, to prevent automatic save, we pass the parameter commit=False as follows.
+            instance = new_post_form.save(commit=False)
+            instance.author = logged_in_user_profile
+            instance.save()
 
     return redirect('main-posts-view')

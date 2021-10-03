@@ -38,11 +38,11 @@ Posts
 
                 {% endif %}
 
-                <form action="" method="post">
+                <form action="{% url 'submit-new-comment' %}" method="post">
                     {% csrf_token %}
                     {{new_comment_form.as_p}}
                     <input type="hidden" name="post_id" value="{{post.id}}">
-                    <button type="submit" class="btn btn-success" name="submit_comment_form">Comment</button>
+                    <button type="submit" class="btn btn-success">Comment</button>
                 </form>
                 <hr>
             {% endfor %}
@@ -53,10 +53,10 @@ Posts
 
             <h1>Create a post</h1>
             <hr>
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="{% url 'create-post' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{new_post_form.as_p}}
-                <button type="submit" class="btn btn-secondary" name="submit_post_form">Post</button>
+                <button type="submit" class="btn btn-secondary">Post</button>
             </form>
 
         </div>
