@@ -70,6 +70,14 @@ class Profile(models.Model):
         super().save(*args, **kwargs)
 
 
+# Model that extends models.Manager, which performs interface for database operations.
+class RelationshipManager(models.Manager):
+
+    def invitations_received(self, receiver):
+        query_set = Relationship.objects.filter(receiver=receiver, status='sent')
+        return query_set
+
+
 class Relationship(models.Model):
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='receiver')
@@ -80,6 +88,8 @@ class Relationship(models.Model):
     status = models.CharField(max_length=10, choices=status_choices)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = RelationshipManager()
 
     def __str__(self):
         return str(self.sender) + '-->' + str(self.receiver) + ':' + str(self.status)

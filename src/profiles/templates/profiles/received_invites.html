@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Received Invitations
+{% endblock title %}
+
+
+{% block content %}
+<h3>You have received invitations (connection/friend requests) from the following people.</h3>
+<h4>They can view your posts and updates once you 'Accept' their invitation request.</h4>
+<hr>
+<ul>
+    {% for invite in received_invitations_qs %}
+    <li>
+        <section style="border:solid black 1px">
+            <p>{{invite.sender.user}}</p><br>
+            <img src="{{invite.sender.avatar.url}}" alt="avatar" style="width:75px; height:75px;"><br>
+            <p>Name: {{invite.sender.first_name}} {{invite.sender.last_name}}</p><br>
+            <hr>
+            <button class="btn btn-success">Accept</button>&nbsp;&nbsp;
+            <button class="btn btn-danger">Reject</button>&nbsp;&nbsp;
+        </section>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}
