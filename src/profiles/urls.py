@@ -8,4 +8,5 @@ urlpatterns = [
     path('my-profile/my-friends/', friends_list, name='my-friends-list'),
     path('my-profile/pending-requests/', pending_requests, name='pending-requests'),
     path('my-profile/available-profiles-to-invite/', available_profiles_to_invite, name='available-profiles-to-invite'),
+    path('send-invitation-to-add-friend', send_friend_request, name='send-friend-request'),
 ]

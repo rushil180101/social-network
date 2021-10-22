@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .forms import *
 from .models import Profile
 
@@ -63,3 +64,18 @@ def available_profiles_to_invite(request):
         'available_profiles': available_profiles,
     }
     return render(request, 'profiles/available_profiles_to_invite.html', context)
+
+
+def send_friend_request(request):
+    if request.method == 'POST':
+        logged_in_user_profile = Profile.objects.get(user=request.user)
+        sender = logged_in_user_profile
+        receiver = Profile.objects.get(pk=request.POST.get('profile_pk'))
+        Relationship.objects.create(
+            sender=sender,
+            receiver=receiver,
+            status='sent'
+        )
+        messages.success(request, 'Friend Request has been sent.')
+        return redirect('my-profile')
+    return redirect('my-profile')
