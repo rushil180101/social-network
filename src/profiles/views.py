@@ -37,3 +37,11 @@ def received_invitations_view(request):
     }
 
     return render(request, 'profiles/received_invites.html', context)
+
+
+def available_profiles_to_invite(request):
+    available_profiles = Profile.objects.profiles_available_to_invite(request.user)
+    context = {
+        'available_profiles': available_profiles,
+    }
+    return render(request, 'profiles/available_profiles_to_invite.html', context)

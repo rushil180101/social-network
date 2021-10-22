@@ -2,7 +2,30 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from .utils import get_random_code
+from django.db.models import QuerySet, Q
 from posts.models import Post
+
+
+class ProfileManager(models.Manager):
+
+    # Get all the profiles that are available to invite for the
+    # current logged in user.
+    def profiles_available_to_invite(self, user):
+        logged_in_user_profile = Profile.objects.get(user=user)
+        friends = [Profile.objects.get(user=i) for i in list(logged_in_user_profile.friends.all())]
+        pending_invitations_senders = [pending_invitation.sender for pending_invitation in
+                                       Relationship.objects.filter(receiver=logged_in_user_profile)]
+        pending_invitations_receivers = [pending_invitation.receiver for pending_invitation in
+                                         Relationship.objects.filter(sender=logged_in_user_profile)]
+        pending_invitation_profiles = pending_invitations_senders
+        pending_invitation_profiles.extend(pending_invitations_receivers)
+        profiles_to_be_excluded = []
+        profiles_to_be_excluded.extend(pending_invitation_profiles)
+        profiles_to_be_excluded.extend(friends)
+        profiles_to_be_excluded.append(logged_in_user_profile)
+        available_profiles = [profile for profile in list(Profile.objects.all())
+                              if profile not in profiles_to_be_excluded]
+        return available_profiles
 
 
 class Profile(models.Model):
@@ -23,6 +46,8 @@ class Profile(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = ProfileManager()
 
     # Function to return a list of friends.
     def get_friends(self):
