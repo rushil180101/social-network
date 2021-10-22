@@ -19,7 +19,7 @@ My Friends
                 {{profile.last_name}}<br>
             </div>
             <div class="col-md-4">
-                <form action="" method="post">
+                <form action="{% url 'remove-from-friends' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{profile.pk}}">
                     <button type="submit" class="btn btn-primary" style="margin: 10%">Remove from Friends</button>

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.db.models import Q
 from .forms import *
 from .models import Profile
 
@@ -77,5 +78,27 @@ def send_friend_request(request):
             status='sent'
         )
         messages.success(request, 'Friend Request has been sent.')
+        return redirect('my-profile')
+    return redirect('my-profile')
+
+
+def remove_from_friends(request):
+    if request.method == 'POST':
+        logged_in_user_profile = Profile.objects.get(user=request.user)
+        sender = logged_in_user_profile
+        receiver = Profile.objects.get(pk=request.POST.get('profile_pk'))
+        relationship = Relationship.objects.filter(
+            (Q(sender=sender) & Q(receiver=receiver)) |
+            (Q(sender=receiver) & Q(receiver=sender))
+        )
+        if relationship:
+            relationship.delete()
+
+        logged_in_user_profile.friends.remove(receiver.user)
+        receiver.friends.remove(logged_in_user_profile.user)
+        logged_in_user_profile.save()
+        receiver.save()
+
+        messages.success(request, 'Removed from friends.')
         return redirect('my-profile')
     return redirect('my-profile')

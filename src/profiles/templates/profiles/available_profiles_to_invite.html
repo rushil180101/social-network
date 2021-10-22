@@ -22,7 +22,7 @@ Available Profiles to Invite
             <div class="col-md-2">
                 <form action="{% url 'send-friend-request' %}" method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="profile_pk" value="{{profile.id}}">
+                    <input type="hidden" name="profile_pk" value="{{profile.pk}}">
                     <button type="submit" class="btn btn-primary" style="margin: 10%">Add to Friends</button>
                 </form>
             </div>
