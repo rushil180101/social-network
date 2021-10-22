@@ -102,6 +102,10 @@ class RelationshipManager(models.Manager):
         query_set = Relationship.objects.filter(receiver=receiver, status='sent')
         return query_set
 
+    def invitations_sent(self, sender):
+        query_set = Relationship.objects.filter(sender=sender, status='sent')
+        return query_set
+
 
 class Relationship(models.Model):
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender')

@@ -35,8 +35,26 @@ def received_invitations_view(request):
     context = {
         'received_invitations_qs': received_invitations_qs,
     }
-
     return render(request, 'profiles/received_invites.html', context)
+
+
+def friends_list(request):
+    logged_in_user_profile = Profile.objects.get(user=request.user)
+    friends_profiles = [Profile.objects.get(user=i) for i in list(logged_in_user_profile.friends.all())]
+    context = {
+        'friends_profiles': friends_profiles,
+    }
+    return render(request, 'profiles/friends_list.html', context)
+
+
+def pending_requests(request):
+    logged_in_user_profile = Profile.objects.get(user=request.user)
+    sent_invitation_requests = Relationship.objects.invitations_sent(logged_in_user_profile)
+    profiles = [invitation_request.receiver for invitation_request in sent_invitation_requests]
+    context = {
+        'profiles': profiles,
+    }
+    return render(request, 'profiles/pending_requests.html', context)
 
 
 def available_profiles_to_invite(request):

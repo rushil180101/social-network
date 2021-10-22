@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+My Pending Requests
+{% endblock title %}
+
+{% block content %}
+<div class="centered1">
+    <br>
+    <h1>Friend Requests sent by you.</h1>
+    <hr>
+    <ul>
+      {% for profile in profiles %}
+      <li>
+        <div class="row" style="margin: 1%; width: 75%; border: solid black 1px; border-radius: 5px;">
+            <div class="col-md-6">
+                {{profile.user}}<br>
+                {{profile.first_name}}<br>
+                {{profile.last_name}}<br>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-secondary" disabled>Waiting for approval</button>
+            </div>
+            <div class="col-md-3">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value="{{profile.pk}}">
+                    <button type="submit" class="btn btn-primary" style="margin: 10%">Unsend (Delete this friend request)</button>
+                </form>
+            </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'my-profile' %}" class="btn btn-primary">Back to My Profile</a>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

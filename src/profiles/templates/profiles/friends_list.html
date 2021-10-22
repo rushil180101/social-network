@@ -1,38 +1,37 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
-Available Profiles to Invite
+My Friends
 {% endblock title %}
 
-
 {% block content %}
-<h3>Here's the list of people you can connect with.</h3>
-<p>These people are neither in your friends list nor do they have any pending invitations with you.</p>
-<hr>
-<ul>
-    {% for profile in available_profiles %}
-    <li>
+<div class="centered1">
+    <br>
+    <h1>My Friends</h1>
+    <hr>
+    <ul>
+      {% for profile in friends_profiles %}
+      <li>
         <div class="row" style="margin: 1%; width: 75%; border: solid black 1px; border-radius: 5px;">
-            <div class="col-md-10">
+            <div class="col-md-8">
                 {{profile.user}}<br>
                 {{profile.first_name}}<br>
                 {{profile.last_name}}<br>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <form action="" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{profile.pk}}">
-                    <button type="submit" class="btn btn-primary" style="margin: 10%">Add to Friends</button>
+                    <button type="submit" class="btn btn-primary" style="margin: 10%">Remove from Friends</button>
                 </form>
             </div>
         </div>
-    </li>
-    {% endfor %}
-</ul>
-<a href="{% url 'my-profile' %}" class="btn btn-primary">Back to My Profile</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'my-profile' %}" class="btn btn-primary">Back to My Profile</a>
+</div>
 {% endblock content %}
-
 
 {% block scripts %}
 {% endblock scripts %}

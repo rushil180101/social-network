@@ -24,12 +24,10 @@ My Profile
             Bio<br>
             {{profile.bio}}<br>
             <br>
-            Friends
-            <ul>
-                {% for friend in profile.get_friends %}
-                    <li>{{friend}}</li>
-                {% endfor %}
-            </ul>
+            <a href="{% url 'my-friends-list' %}" class="btn btn-primary">See Friends List</a>
+            <a href="{% url 'my-received-invites' %}" class="btn btn-primary">See Received Requests</a>
+            <a href="{% url 'pending-requests' %}" class="btn btn-primary">See Pending Requests</a>
+            <a href="{% url 'available-profiles-to-invite' %}" class="btn btn-primary">Other People</a>
         </div>
     </div>
     <button type="button" id="update-profile-button" class="btn btn-primary">Update my profile</button>
