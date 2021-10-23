@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Q
+from django.views.generic import DetailView
 from .forms import *
 from .models import Profile
 
@@ -125,3 +126,45 @@ def reject_request(request):
         relationship.delete()
         return redirect('my-received-invites')
     return redirect('my-received-invites')
+
+
+class ProfileDetailView(DetailView):
+    model = Profile
+    template_name = 'profiles/profile_detail.html'
+    context_object_name = 'profile'
+
+    def get_object(self, queryset=None):
+        slug = self.kwargs.get('slug')
+        profile = Profile.objects.get(slug=slug)
+        return profile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context["posts"] = self.get_object().get_posts()
+        context["len_posts"] = self.get_object().get_posts_count()
+        context["friends_count"] = self.get_object().get_friends_count()
+        logged_in_user_profile = Profile.objects.get(user=self.request.user)
+
+        # Check if the profile is connected as a friend with current logged in user.
+        condition_1 = self.request.user in list(self.get_object().friends.all())
+        condition_2 = self.get_object().user in list(logged_in_user_profile.friends.all())
+        if condition_1 and condition_2:
+            context["is_friends"] = True
+        else:
+            context["is_friends"] = False
+
+        # Check for received friend request.
+        try:
+            relationship = Relationship.objects.get(sender=self.get_object(), receiver=logged_in_user_profile)
+        except Relationship.DoesNotExist:
+            relationship = None
+        context["received_request"] = True if relationship is not None else False
+
+        # Check for pending sent request.
+        try:
+            relationship = Relationship.objects.get(sender=logged_in_user_profile, receiver=self.get_object())
+        except Relationship.DoesNotExist:
+            relationship = None
+        context["pending_sent_request"] = True if relationship is not None else False
+
+        return context

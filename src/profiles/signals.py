@@ -9,7 +9,12 @@ from .models import Profile, Relationship
 def post_save_create_profile(sender, instance, created, **kwargs):
     # Other operations instead of 'created' can be 'modified', 'deleted'.
     if created:
-        Profile.objects.create(user=instance)
+        profile = Profile(user=instance)
+        if instance.first_name:
+            profile.first_name = instance.first_name
+        if instance.last_name:
+            profile.last_name = instance.last_name
+        profile.save()
     elif not created:
         profile = Profile.objects.get(user=instance)
         if instance.first_name:
