@@ -79,18 +79,27 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user.username)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__initial_first_name = self.first_name
+        self.__initial_last_name = self.last_name
+
     def save(self, *args, **kwargs):
+        to_slug = self.slug
         # Create a slug from first_name and last_name if they both exist, else create a slug from username.
         # If the profile with same first_name and last_name exists, then append a random unique ID
         # with the slug and then save in the database.
-        if self.first_name and self.last_name:
-            to_slug = slugify(str(self.first_name) + ' ' + str(self.last_name))
-            slug_exists = Profile.objects.filter(slug=to_slug).exists()
-            while slug_exists:
-                to_slug = slugify(to_slug + ' ' + str(get_random_code()))
+        if ((self.first_name != self.__initial_first_name) or
+            (self.last_name != self.__initial_last_name) or
+            (self.slug == "")):
+            if self.first_name and self.last_name:
+                to_slug = slugify(str(self.first_name) + ' ' + str(self.last_name))
                 slug_exists = Profile.objects.filter(slug=to_slug).exists()
-        else:
-            to_slug = str(self.user)
+                while slug_exists:
+                    to_slug = slugify(to_slug + ' ' + str(get_random_code()))
+                    slug_exists = Profile.objects.filter(slug=to_slug).exists()
+            else:
+                to_slug = str(self.user)
         self.slug = to_slug
         super().save(*args, **kwargs)
 
