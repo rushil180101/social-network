@@ -15,17 +15,16 @@ def my_profile(request):
         request.FILES or None,
         instance=logged_in_user_profile
     )
-    profile_updated = False
 
     if request.method == 'POST':
         if profile_update_form.is_valid():
             profile_update_form.save()
-            profile_updated = True
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('my-profile')
 
     context = {
         'profile': logged_in_user_profile,
         'profile_update_form': profile_update_form,
-        'profile_updated': profile_updated,
     }
     return render(request, 'profiles/myprofile.html', context)
 
