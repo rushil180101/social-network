@@ -78,8 +78,8 @@ def send_friend_request(request):
             status='sent'
         )
         messages.success(request, 'Friend Request has been sent.')
-        return redirect('my-profile')
-    return redirect('my-profile')
+        return redirect('available-profiles-to-invite')
+    return redirect('available-profiles-to-invite')
 
 
 def remove_from_friends(request):
@@ -100,8 +100,8 @@ def remove_from_friends(request):
         receiver.save()
 
         messages.success(request, 'Removed from friends.')
-        return redirect('my-profile')
-    return redirect('my-profile')
+        return redirect('my-friends-list')
+    return redirect('my-friends-list')
 
 
 def accept_request(request):
@@ -118,4 +118,11 @@ def accept_request(request):
 
 
 def reject_request(request):
-    pass
+    if request.method == 'POST':
+        logged_in_user_profile = Profile.objects.get(user=request.user)
+        sender = Profile.objects.get(pk=request.POST.get("profile_pk"))
+        receiver = logged_in_user_profile
+        relationship = Relationship.objects.get(sender=sender, receiver=receiver)
+        relationship.delete()
+        return redirect('my-received-invites')
+    return redirect('my-received-invites')
