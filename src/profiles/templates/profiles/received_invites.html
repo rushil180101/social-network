@@ -1,32 +1,47 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
-Received Invitations
+Received Requests
 {% endblock title %}
 
-
 {% block content %}
-<h3>You have received invitations (connection/friend requests) from the following people.</h3>
-<h4>They can view your posts and updates once you 'Accept' their invitation request.</h4>
-<hr>
-<ul>
-    {% for invite in received_invitations_qs %}
-    <li>
-        <section style="border:solid black 1px">
-            <p>{{invite.sender.user}}</p><br>
-            <img src="{{invite.sender.avatar.url}}" alt="avatar" style="width:75px; height:75px;"><br>
-            <p>Name: {{invite.sender.first_name}} {{invite.sender.last_name}}</p><br>
-            <hr>
-            <button class="btn btn-success">Accept</button>&nbsp;&nbsp;
-            <button class="btn btn-danger">Reject</button>&nbsp;&nbsp;
-        </section>
-    </li>
-    {% endfor %}
-</ul>
-<a href="{% url 'my-profile' %}" class="btn btn-primary">Back to My Profile</a>
+<div class="centered1">
+    <br>
+    <h1>You have received friend requests from the following people.</h1>
+    <hr>
+    <ul>
+      {% for sender in senders %}
+      <li>
+        <div class="row" style="margin: 1%; width: 75%; border: solid black 1px; border-radius: 5px;">
+            <div class="col-md-4">
+                <img src="{{sender.avatar.url}}" alt="avatar" style="width: 75px; height: 75px;">
+            </div>
+            <div class="col-md-4">
+                {{sender.user}}<br>
+                {{sender.first_name}}<br>
+                {{sender.last_name}}<br>
+            </div>
+            <div class="col-md-4">
+                <form action="{% url 'accept-request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value="{{sender.pk}}">
+                    <button type="submit" class="btn btn-success">Accept</button>
+                </form>
+                <br>
+                <form action="{% url 'reject-request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value="{{sender.pk}}">
+                    <button type="submit" class="btn btn-warning">Reject</button>
+                </form>
+            </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'my-profile' %}" class="btn btn-primary">Back to My Profile</a>
+</div>
 {% endblock content %}
-
 
 {% block scripts %}
 {% endblock scripts %}
+

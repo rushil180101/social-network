@@ -33,9 +33,9 @@ def my_profile(request):
 def received_invitations_view(request):
     logged_in_user_profile = Profile.objects.get(user=request.user)
     received_invitations_qs = Relationship.objects.invitations_received(logged_in_user_profile)
-
+    senders = [invitation.sender for invitation in list(received_invitations_qs)]
     context = {
-        'received_invitations_qs': received_invitations_qs,
+        'senders': senders,
     }
     return render(request, 'profiles/received_invites.html', context)
 
@@ -102,3 +102,20 @@ def remove_from_friends(request):
         messages.success(request, 'Removed from friends.')
         return redirect('my-profile')
     return redirect('my-profile')
+
+
+def accept_request(request):
+    if request.method == 'POST':
+        logged_in_user_profile = Profile.objects.get(user=request.user)
+        sender = Profile.objects.get(pk=request.POST.get("profile_pk"))
+        receiver = logged_in_user_profile
+        sender.friends.add(receiver.user)
+        receiver.friends.add(sender.user)
+        relationship = Relationship.objects.get(sender=sender, receiver=receiver)
+        relationship.delete()
+        return redirect('my-received-invites')
+    return redirect('my-received-invites')
+
+
+def reject_request(request):
+    pass
