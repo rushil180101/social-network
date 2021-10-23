@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.shortcuts import reverse
 from .utils import get_random_code
 from django.db.models import QuerySet, Q
 from posts.models import Post
@@ -102,6 +103,10 @@ class Profile(models.Model):
                 to_slug = str(self.user)
         self.slug = to_slug
         super().save(*args, **kwargs)
+
+    # Function to get the absolute url of the profile.
+    def get_absolute_url(self):
+        return reverse("profile-detail-view", kwargs={'slug': self.slug})
 
 
 # Model that extends models.Manager, which performs interface for database operations.
