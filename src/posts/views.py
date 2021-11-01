@@ -5,6 +5,7 @@ from .forms import *
 from django.views.generic import UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.http import JsonResponse
 
 
 def all_posts_view(request):
@@ -53,7 +54,14 @@ def like_unlike_post(request):
 
         like_obj.save()
         post.save()
-        return redirect('main-posts-view')
+
+        data = {
+            'value': like_obj.like_unlike_value,
+            'likes': post.liked_by.all().count()
+        }
+
+        return JsonResponse(data, safe=False)
+        # return redirect('main-posts-view')
 
     return redirect('main-posts-view')
 
