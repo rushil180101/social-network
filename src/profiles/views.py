@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Q
 from django.views.generic import DetailView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 from .models import Profile
 
 
+@login_required
 def my_profile(request):
     logged_in_user_profile = Profile.objects.get(user=request.user)
 
@@ -30,6 +33,7 @@ def my_profile(request):
     return render(request, 'profiles/myprofile.html', context)
 
 
+@login_required
 def received_invitations_view(request):
     logged_in_user_profile = Profile.objects.get(user=request.user)
     received_invitations_qs = Relationship.objects.invitations_received(logged_in_user_profile)
@@ -40,6 +44,7 @@ def received_invitations_view(request):
     return render(request, 'profiles/received_invites.html', context)
 
 
+@login_required
 def friends_list(request):
     logged_in_user_profile = Profile.objects.get(user=request.user)
     friends_profiles = [Profile.objects.get(user=i) for i in list(logged_in_user_profile.friends.all())]
@@ -49,6 +54,7 @@ def friends_list(request):
     return render(request, 'profiles/friends_list.html', context)
 
 
+@login_required
 def pending_requests(request):
     logged_in_user_profile = Profile.objects.get(user=request.user)
     sent_invitation_requests = Relationship.objects.invitations_sent(logged_in_user_profile)
@@ -59,6 +65,7 @@ def pending_requests(request):
     return render(request, 'profiles/pending_requests.html', context)
 
 
+@login_required
 def available_profiles_to_invite(request):
     available_profiles = Profile.objects.profiles_available_to_invite(request.user)
     context = {
@@ -67,6 +74,7 @@ def available_profiles_to_invite(request):
     return render(request, 'profiles/available_profiles_to_invite.html', context)
 
 
+@login_required
 def send_friend_request(request):
     if request.method == 'POST':
         logged_in_user_profile = Profile.objects.get(user=request.user)
@@ -82,6 +90,7 @@ def send_friend_request(request):
     return redirect('available-profiles-to-invite')
 
 
+@login_required
 def remove_from_friends(request):
     if request.method == 'POST':
         logged_in_user_profile = Profile.objects.get(user=request.user)
@@ -104,6 +113,7 @@ def remove_from_friends(request):
     return redirect('my-friends-list')
 
 
+@login_required
 def accept_request(request):
     if request.method == 'POST':
         logged_in_user_profile = Profile.objects.get(user=request.user)
@@ -117,6 +127,7 @@ def accept_request(request):
     return redirect('my-received-invites')
 
 
+@login_required
 def reject_request(request):
     if request.method == 'POST':
         logged_in_user_profile = Profile.objects.get(user=request.user)
@@ -128,7 +139,7 @@ def reject_request(request):
     return redirect('my-received-invites')
 
 
-class ProfileDetailView(DetailView):
+class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = 'profiles/profile_detail.html'
     context_object_name = 'profile'

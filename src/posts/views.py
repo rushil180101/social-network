@@ -6,8 +6,11 @@ from django.views.generic import UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
+@login_required
 def all_posts_view(request):
     posts_qs = Post.objects.all()
     logged_in_user_profile = Profile.objects.get(user=request.user)
@@ -27,6 +30,7 @@ def all_posts_view(request):
     return render(request, 'posts/main.html', context)
 
 
+@login_required
 def like_unlike_post(request):
 
     if request.method == 'POST':
@@ -66,6 +70,7 @@ def like_unlike_post(request):
     return redirect('main-posts-view')
 
 
+@login_required
 def submit_new_comment(request):
 
     if request.method == 'POST':
@@ -82,6 +87,7 @@ def submit_new_comment(request):
     return redirect('main-posts-view')
 
 
+@login_required
 def create_post(request):
 
     if request.method == 'POST':
@@ -100,7 +106,7 @@ def create_post(request):
 
 
 # We use generic views so that the post cannot be deleted/updated directly using the url.
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'posts/confirm_delete.html'
     success_url = reverse_lazy('main-posts-view')
@@ -113,7 +119,7 @@ class PostDeleteView(DeleteView):
         return obj
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostModelForm
     template_name = 'posts/update.html'
