@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
 My Profile
@@ -63,13 +64,44 @@ My Profile
 
 <br>
 
-<div class="ui raised segments" style="width:75%; margin:auto; padding:10px;">
+<div class="ui raised segments" style="width:82%; margin:auto; padding:10px;">
     <br>
     <h1 class="ui header centered">My posts</h1>
+    <hr>
 
-    <div class="ui horizontal segments">
+    <div class="ui link cards" style="margin:auto">
 
-    </div>
+        {% for post in profile.get_posts %}
+      <div class="card">
+        <div class="image">
+            {% if post.image %}
+            <img src="{{post.image.url}}">
+            {% else %}
+            <img src="{% static 'images/post_placeholder.png' %}">
+            {% endif %}
+        </div>
+        <div class="content">
+          <div class="meta">
+            {{post.created|timesince}} ago
+          </div>
+          <div class="description">
+            {{post.short_text_display}}
+          </div>
+        </div>
+        <div class="extra content">
+          <span class="right floated">
+            {{post.num_of_comments}} comment{{post.num_of_comments|pluralize}}
+          </span>
+          <span>
+            <i class="like icon"></i>
+            {{post.likes}} like{{post.likes|pluralize}}
+          </span>
+        </div>
+      </div>
+
+        {% endfor %}
+
+</div>
 
 </div>
 

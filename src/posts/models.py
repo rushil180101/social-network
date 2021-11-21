@@ -5,7 +5,7 @@ from django.core.validators import FileExtensionValidator
 class Post(models.Model):
     author = models.ForeignKey('profiles.Profile', on_delete=models.CASCADE, related_name='posts')
     image = models.ImageField(
-        upload_to='posts',
+        upload_to='posts/',
         validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg', 'gif'])],
         blank=True
     )
@@ -26,6 +26,13 @@ class Post(models.Model):
 
         # Approach - 2 (model_set.all())
         return self.comment_set.all().count()
+
+    def short_text_display(self):
+        if len(str(self.content)) <= 55:
+            return self.content
+        else:
+            content = str(self.content)[:55] + " ... "
+            return content
 
     class Meta:
         ordering = ['-created']
