@@ -5,42 +5,71 @@ Received Requests
 {% endblock title %}
 
 {% block content %}
-<div class="centered1">
+
+
+<div class="ui raised segments" style="width:82%; margin:auto; padding:10px;">
     <br>
-    <h1>You have received friend requests from the following people.</h1>
+    <div class="ui grid">
+        <div class="ui thirteen wide column">
+            <h2>You have received friend requests from the following people.</h2>
+        </div>
+
+        <div class="ui three wide column">
+        <a href="{% url 'my-profile' %}" class="ui primary button">
+            <i class="arrow left icon"></i>
+            Back to My Profile
+        </a>
+        </div>
+    </div>
     <hr>
-    <ul>
-      {% for sender in senders %}
-      <li>
-        <div class="row" style="margin: 1%; width: 75%; border: solid black 1px; border-radius: 5px;">
-            <div class="col-md-4">
-                <img src="{{sender.avatar.url}}" alt="avatar" style="width: 75px; height: 75px;">
-            </div>
-            <div class="col-md-4">
-                {{sender.user}}<br>
-                {{sender.first_name}}<br>
-                {{sender.last_name}}<br>
-                <a class="btn btn-primary" href="{{sender.get_absolute_url}}">See Profile</a>
-            </div>
-            <div class="col-md-4">
+
+    <div class="ui link cards" style="margin:auto">
+
+        {% for sender in senders %}
+      <div class="card">
+        <div class="image">
+            <img src="{{sender.avatar.url}}">
+        </div>
+        <div class="content">
+          <div class="ui header">
+            {{sender.user}}
+              <a class="ui inverted secondary button right floated" href="{{sender.get_absolute_url}}">See Profile</a>
+          </div>
+          <div class="description">
+            {{sender.first_name}} {{sender.last_name}}
+
+          </div>
+        </div>
+        <div class="extra content">
+
+            <div class="left floated">
                 <form action="{% url 'accept-request' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{sender.pk}}">
-                    <button type="submit" class="btn btn-success">Accept</button>
+                    <button type="submit" class="ui green button">
+                        Accept
+                    </button>
                 </form>
-                <br>
+            </div>
+            <div class="right floated">
                 <form action="{% url 'reject-request' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{sender.pk}}">
-                    <button type="submit" class="btn btn-warning">Reject</button>
+                    <button type="submit" class="ui red button">
+                        Reject
+                    </button>
                 </form>
             </div>
+
         </div>
-      </li>
-      {% endfor %}
-    </ul>
-    <a href="{% url 'my-profile' %}" class="btn btn-primary">Back to My Profile</a>
+      </div>
+
+        {% endfor %}
+
 </div>
+
+</div>
+
 {% endblock content %}
 
 {% block scripts %}
