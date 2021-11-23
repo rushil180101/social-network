@@ -38,14 +38,14 @@ My Pending Requests
                 {{profile.first_name}} {{profile.last_name}}
             {% endif %}
 
-            <p class="ui message center aligned">Waiting for approval</p>
+            <p class="ui message center aligned">Friend request sent</p>
 
         </div>
         <div class="extra content">
 
             <div class="left floated">
 
-                <form action="" method="post">
+                <form action="{% url 'delete-request' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{profile.pk}}">
                     <button type="submit" class="ui red small button">Unsend request</button>

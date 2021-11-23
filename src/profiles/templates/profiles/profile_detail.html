@@ -1,51 +1,167 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
 Profile Details
 {% endblock title %}
 
 {% block content %}
-<div class="centered1">
-    <br>
-    <h1>{{profile.user}}'s Profile</h1>
-    <hr>
 
-    <div class="row">
-        <div class="col-md-3" style="float: left; padding:5px;">
-            <img style="width:75%; height:75%; border:solid black 1px; align-content:center;" src="{{profile.avatar.url}}">
+
+<div class="ui raised segments" style="width:75%; margin:auto; padding:10px;">
+    <br>
+    <h1 class="ui header centered">{{profile.user}}'s profile</h1>
+
+    <div class="ui horizontal segments">
+        <div class="ui segment" style="width:35%">
+            <img class="ui medium image centered" src="{{profile.avatar.url}}">
         </div>
-        <div class="col-md-9" style="float: right; padding:5px;">
-            Name : {{profile.first_name}} {{profile.last_name}}<br>
-            <br>
-            Bio<br>
-            {{profile.bio}}<br>
-            <br>
-            Friend{{friends_count|pluralize}} : {{friends_count}}
-            <br>
-            Post{{len_posts|pluralize}} : {{len_posts}}
-            <br>
+        <div class="ui segment" style="width:65%">
+            <div class="ui raised segments">
+              <div class="ui segment">
+                  <p><b>Username : {{profile.user}}</b></p>
+              </div>
+              <div class="ui segment">
+                <p><b>Name : {{profile.first_name}} {{profile.last_name}}</b></p>
+              </div>
+              <div class="ui segment">
+                <p><b>Bio</b></p>
+                  <hr>
+                  <p>{{profile.bio}}</p>
+              </div>
+                <div class="ui segment">
+                <p><b>Friend{{friends_count|pluralize}} : {{friends_count}}</b></p>
+              </div>
+                <div class="ui segment">
+                <p><b>Post{{len_posts|pluralize}} : {{len_posts}}</b></p>
+              </div>
+            </div>
+
+            <hr>
+
             {% if is_friends %}
-            <button type="button" class="btn btn-danger">Remove from friends</button>
+            <form action="{% url 'remove-from-friends' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value="{{profile.pk}}">
+                    <button type="submit" class="ui red button">Remove from Friends</button>
+            </form>
             {% elif received_request %}
-            <button type="button" class="btn btn-success">Accept friend request</button>
+
+            <div class="ui grid">
+
+                <div class="five wide column">
+
+                <form action="{% url 'accept-request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value="{{profile.pk}}">
+                    <button type="submit" class="ui green button">
+                        Accept friend request
+                    </button>
+                </form>
+                </div>
+
+                <div class="five wide column">
+
+                <form action="{% url 'reject-request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value="{{profile.pk}}">
+                    <button type="submit" class="ui red button">
+                        Reject friend request
+                    </button>
+                </form>
+
+                </div>
+
+            </div>
+
             {% elif pending_sent_request %}
-            <button type="button" class="btn btn-secondary" disabled>Friend request sent.</button> &nbsp; &nbsp;
-            <button type="button" class="btn btn-danger">Delete request</button>
+
+            <div class="ui grid">
+
+                <div class="five wide column">
+
+                    <p class="ui compact message">Friend request sent.</p>
+                </div>
+
+                <div class="four wide column">
+
+                    <form action="{% url 'delete-request' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="profile_pk" value="{{profile.pk}}">
+                            <button type="submit" class="ui red small button">Unsend/Delete friend request</button>
+                    </form>
+                </div>
+            </div>
             {% else %}
-            <button type="button" class="btn btn-success">Add to friends</button>
+
+            <form action="{% url 'send-friend-request' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value="{{profile.pk}}">
+                    <button type="submit" class="ui green button">Add to Friends</button>
+            </form>
+
             {% endif %}
+
         </div>
     </div>
+
+</div>
+
+<br>
+
+{% if is_friends %}
+<div class="ui raised segments" style="width:82%; margin:auto; padding:10px;">
+    <br>
+    <h1 class="ui header centered">{{profile.user}}'s posts</h1>
     <hr>
 
-    {% if is_friends %}
+    <div class="ui link cards" style="margin:auto">
+
         {% for post in posts %}
-            <p>{{post.content}}</p><br><br>
+      <div class="card" style="margin:auto; margin-top:8px; margin-bottom:8px;">
+        <div class="image">
+            {% if post.image %}
+            <img src="{{post.image.url}}">
+            {% else %}
+            <img src="{% static 'images/post_placeholder.png' %}">
+            {% endif %}
+        </div>
+        <div class="content">
+          <div class="meta">
+            {{post.created|timesince}} ago
+          </div>
+          <div class="description">
+            {{post.short_text_display}}
+          </div>
+        </div>
+        <div class="extra content">
+          <span class="right floated">
+            {{post.num_of_comments}} comment{{post.num_of_comments|pluralize}}
+          </span>
+          <span>
+            <i class="like icon"></i>
+            {{post.likes}} like{{post.likes|pluralize}}
+          </span>
+        </div>
+      </div>
+
         {% endfor %}
-    {% else %}
-        <h5>You need to be connected as friends to see the posts.</h5>
-    {% endif %}
+
 </div>
+
+</div>
+
+{% else %}
+
+<div class="ui raised segment" style="width:80%; margin:auto; padding:10px;">
+    <p class="ui message" style="text-align:center;">You need to be connected as friends to see {{profile.user}}'s posts.</p>
+</div>
+
+{% endif %}
+
+
+<br><br>
+
 {% endblock content %}
 
 {% block scripts %}

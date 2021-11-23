@@ -139,6 +139,18 @@ def reject_request(request):
     return redirect('my-received-invites')
 
 
+@login_required
+def delete_request(request):
+    if request.method == 'POST':
+        logged_in_user_profile = Profile.objects.get(user=request.user)
+        sender = logged_in_user_profile
+        receiver = Profile.objects.get(pk=request.POST.get("profile_pk"))
+        relationship = Relationship.objects.get(sender=sender, receiver=receiver)
+        relationship.delete()
+        return redirect('pending-requests')
+    return redirect('pending-requests')
+
+
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = 'profiles/profile_detail.html'
