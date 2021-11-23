@@ -72,7 +72,7 @@ My Profile
     <div class="ui link cards" style="margin:auto">
 
         {% for post in profile.get_posts %}
-      <div class="card">
+      <div class="card" style="margin:auto; margin-top:8px; margin-bottom:8px;">
         <div class="image">
             {% if post.image %}
             <img src="{{post.image.url}}">

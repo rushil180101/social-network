@@ -11,7 +11,7 @@ Received Requests
     <br>
     <div class="ui grid">
         <div class="ui thirteen wide column">
-            <h2>You have received friend requests from the following people.</h2>
+            <h2>&nbsp; You have received friend requests from the following people.</h2>
         </div>
 
         <div class="ui three wide column">
@@ -26,19 +26,18 @@ Received Requests
     <div class="ui link cards" style="margin:auto">
 
         {% for sender in senders %}
-      <div class="card">
+      <div class="card" style="margin:auto; margin-top:7px; margin-bottom:7px;">
         <div class="image">
             <img src="{{sender.avatar.url}}">
         </div>
-        <div class="content">
-          <div class="ui header">
-            {{sender.user}}
-              <a class="ui inverted secondary button right floated" href="{{sender.get_absolute_url}}">See Profile</a>
-          </div>
-          <div class="description">
-            {{sender.first_name}} {{sender.last_name}}
+        <div class="content center aligned">
 
-          </div>
+            <strong>{{sender.user}}</strong>
+            {% if sender.first_name or sender.last_name %}
+                <i class="ui right arrow icon"></i>
+                {{sender.first_name}} {{sender.last_name}}
+            {% endif %}
+
         </div>
         <div class="extra content">
 
@@ -46,20 +45,23 @@ Received Requests
                 <form action="{% url 'accept-request' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{sender.pk}}">
-                    <button type="submit" class="ui green button">
+                    <button type="submit" class="ui green small button">
                         Accept
                     </button>
                 </form>
             </div>
-            <div class="right floated">
+
+            <div class="left floated">
                 <form action="{% url 'reject-request' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{sender.pk}}">
-                    <button type="submit" class="ui red button">
+                    <button type="submit" class="ui red small button">
                         Reject
                     </button>
                 </form>
             </div>
+
+            <a class="ui inverted secondary small button right floated" href="{{sender.get_absolute_url}}">Profile</a>
 
         </div>
       </div>

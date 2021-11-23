@@ -7,31 +7,64 @@ Available Profiles to Invite
 
 
 {% block content %}
-<h3>Here's the list of people you can connect with.</h3>
-<p>These people are neither in your friends list nor do they have any pending invitations with you.</p>
-<hr>
-<ul>
-    {% for profile in available_profiles %}
-    <li>
-        <div class="row" style="margin: 1%; width: 75%; border: solid black 1px; border-radius: 5px;">
-            <div class="col-md-10">
-                {{profile.user}}<br>
-                {{profile.first_name}}<br>
-                {{profile.last_name}}<br>
-                <a class="btn btn-primary" href="{{profile.get_absolute_url}}">See Profile</a>
-            </div>
-            <div class="col-md-2">
+
+
+<div class="ui raised segments" style="width:82%; margin:auto; padding:10px;">
+    <br>
+    <div class="ui grid">
+        <div class="ui thirteen wide column">
+            <h2>&nbsp; People</h2>
+        </div>
+
+        <div class="ui three wide column">
+        <a href="{% url 'my-profile' %}" class="ui primary button">
+            <i class="arrow left icon"></i>
+            Back to My Profile
+        </a>
+        </div>
+    </div>
+    <hr>
+
+    <div class="ui link cards" style="margin:auto">
+
+        {% for profile in available_profiles %}
+      <div class="card" style="margin:auto; margin-top:7px; margin-bottom:7px;">
+        <div class="image">
+            <img src="{{profile.avatar.url}}">
+        </div>
+        <div class="content center aligned">
+
+            <strong>{{profile.user}}</strong>
+            {% if profile.first_name or profile.last_name %}
+                <i class="ui right arrow icon"></i>
+                {{profile.first_name}} {{profile.last_name}}
+            {% endif %}
+
+        </div>
+        <div class="extra content">
+
+            <div class="left floated">
+
                 <form action="{% url 'send-friend-request' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{profile.pk}}">
-                    <button type="submit" class="btn btn-primary" style="margin: 10%">Add to Friends</button>
+                    <button type="submit" class="ui green small button">Add to Friends</button>
                 </form>
+
             </div>
+
+            <a class="ui inverted secondary small button right floated" href="{{profile.get_absolute_url}}">Profile</a>
+
         </div>
-    </li>
-    {% endfor %}
-</ul>
-<a href="{% url 'my-profile' %}" class="btn btn-primary">Back to My Profile</a>
+      </div>
+
+        {% endfor %}
+
+</div>
+
+</div>
+
+<br><br>
 {% endblock content %}
 
 

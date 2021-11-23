@@ -5,36 +5,65 @@ My Pending Requests
 {% endblock title %}
 
 {% block content %}
-<div class="centered1">
+
+
+<div class="ui raised segments" style="width:82%; margin:auto; padding:10px;">
     <br>
-    <h1>Friend Requests sent by you.</h1>
+    <div class="ui grid">
+        <div class="ui thirteen wide column">
+            <h2>&nbsp; Friend requests sent by you.</h2>
+        </div>
+
+        <div class="ui three wide column">
+        <a href="{% url 'my-profile' %}" class="ui primary button">
+            <i class="arrow left icon"></i>
+            Back to My Profile
+        </a>
+        </div>
+    </div>
     <hr>
-    <ul>
-      {% for profile in profiles %}
-      <li>
-        <div class="row" style="margin: 1%; width: 75%; border: solid black 1px; border-radius: 5px;">
-            <div class="col-md-6">
-                {{profile.user}}<br>
-                {{profile.first_name}}<br>
-                {{profile.last_name}}<br>
-                <a class="btn btn-primary" href="{{profile.get_absolute_url}}">See Profile</a>
-            </div>
-            <div class="col-md-3">
-                <button class="btn btn-secondary" disabled>Waiting for approval</button>
-            </div>
-            <div class="col-md-3">
+
+    <div class="ui link cards" style="margin:auto">
+
+        {% for profile in profiles %}
+      <div class="card" style="margin:auto; margin-top:7px; margin-bottom:7px;">
+        <div class="image">
+            <img src="{{profile.avatar.url}}">
+        </div>
+        <div class="content center aligned">
+
+            <strong>{{profile.user}}</strong>
+            {% if profile.first_name or profile.last_name %}
+                <i class="ui right arrow icon"></i>
+                {{profile.first_name}} {{profile.last_name}}
+            {% endif %}
+
+            <p class="ui message center aligned">Waiting for approval</p>
+
+        </div>
+        <div class="extra content">
+
+            <div class="left floated">
+
                 <form action="" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value="{{profile.pk}}">
-                    <button type="submit" class="btn btn-primary" style="margin: 10%">Unsend (Delete this friend request)</button>
+                    <button type="submit" class="ui red small button">Unsend request</button>
                 </form>
+
             </div>
+
+            <a class="ui inverted secondary small button right floated" href="{{profile.get_absolute_url}}">Profile</a>
+
         </div>
-      </li>
-      {% endfor %}
-    </ul>
-    <a href="{% url 'my-profile' %}" class="btn btn-primary">Back to My Profile</a>
+      </div>
+
+        {% endfor %}
+
 </div>
+
+</div>
+
 {% endblock content %}
 
 {% block scripts %}
