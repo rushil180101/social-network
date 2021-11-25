@@ -16,12 +16,15 @@ Delete Post
         {% endfor %}
 
     {% else %}
-        <h4>Are you sure you want to delete this post ?</h4>
-        <hr>
-        <form method="post" action="">
+        <div class="ui raised segment center aligned" style="margin:auto; width:50%;">
+            <h1 class="ui header center aligned">Are you sure you want to delete this post ?</h1>
+            <hr>
+            <form method="post" action="" class="ui form">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Yes, delete</button>
-        </form>
+            <button type="submit" class="ui red button">Yes, delete</button>
+                <a href="{% url 'main-posts-view' %}" class="ui secondary button">Back</a>
+            </form>
+        </div>
     {% endif %}
 
 {% endblock content %}

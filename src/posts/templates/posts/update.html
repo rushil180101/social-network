@@ -7,13 +7,19 @@ Update Post
 
 
 {% block content %}
-<h3>Update Post</h3>
-<hr>
-<form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit" class="btn btn-success">Update</button>
-</form>
+
+
+<div class="ui raised segment" style="margin:auto; width:65%;">
+<h2 class="ui header center aligned">Edit Post</h2>
+    <hr>
+    <form action="" method="post" enctype="multipart/form-data" class="ui form">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="ui primary button">Update</button>
+        <a href="{% url 'main-posts-view' %}" class="ui secondary button">Back</a>
+    </form>
+</div>
+
 {% endblock content %}
 
 

@@ -12,8 +12,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 @login_required
 def all_posts_view(request):
-    posts_qs = Post.objects.all()
     logged_in_user_profile = Profile.objects.get(user=request.user)
+
+    user_profiles = list(logged_in_user_profile.get_friends())
+    user_profiles.append(logged_in_user_profile.user)
+    posts_qs = [post for post in Post.objects.all() if post.author.user in user_profiles]
 
     # Form for creating new post by the logged in user.
     new_post_form = PostModelForm()

@@ -50,10 +50,8 @@ Posts
 
                             <button type="submit" class="ui small button like-unlike-btn-{{post.id}}">
                                 {% if profile not in post.liked_by.all %}
-                                <i class="thumbs up icon"></i>
                                 Like
                                 {% else %}
-                                <i class="thumbs down icon"></i>
                                 Unlike
                                 {% endif %}
                             </button>
@@ -63,7 +61,7 @@ Posts
             </div>
 
             {% if post.comment_set.exists %}
-            <div id="comment-box">
+            <div id="comment-box" style="display:none">
                 <hr>
                 <p><strong> &nbsp; Comments</strong></p>
                     <div class="ui segments">
@@ -77,71 +75,37 @@ Posts
                     </div>
             </div>
             {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-    <div class="five wide column">
-        <div class="ui raised segment"></div>
-    </div>
-</div>
 
-<div class="row" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
-        <div class="col-md-8">
-
-            {% for post in posts_qs %}
-                <h4>{{post.author}}</h4><br>
-                {{post.created|timesince}} ago <br>
-                {% ifequal request.user post.author.user %}
-                    <a href="{% url 'update-post' post.pk %}"><button class="btn btn-dark">Update</button></a>&nbsp;&nbsp;
-                    <a href="{% url 'delete-post' post.pk %}"><button class="btn btn-dark">Delete</button></a>&nbsp;&nbsp;
-                {% endifequal %}
-                <br>
-<!--                <img src="post.image.url" alt="post image">-->
-                <p>{{post.content}}</p><br>
-
-                <form method="post" action="{% url 'like-unlike-post' %}" class="like-unlike-form" id="{{post.id}}">
-                    {% csrf_token %}
-                    <input type="hidden" name="post_id" value="{{post.id}}">
-
-                    <button type="submit" class="btn btn-primary like-unlike-btn-{{post.id}}">
-                        {% if profile not in post.liked_by.all %}
-                        Like
-                        {% else %}
-                        Unlike
-                        {% endif %}
-                    </button>
-                </form>
-
-                Total likes: <div class="like-unlike-count-{{post.id}}">{{post.likes}}</div>
-
-
-
-
-                <form action="{% url 'submit-new-comment' %}" method="post">
-                    {% csrf_token %}
-                    {{new_comment_form.as_p}}
-                    <input type="hidden" name="post_id" value="{{post.id}}">
-                    <button type="submit" class="btn btn-success">Comment</button>
-                </form>
-                <hr>
-            {% endfor %}
-
-        </div>
-
-        <div class="col-md-4" style="border-left: groove">
-
-            <h1>Create a post</h1>
             <hr>
-            <form action="{% url 'create-post' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{new_post_form.as_p}}
-                <button type="submit" class="btn btn-secondary">Post</button>
+            <form action="{% url 'submit-new-comment' %}" method="post">
+                    {% csrf_token %}
+                    {{new_comment_form.body}}
+                    <input type="hidden" name="post_id" value="{{post.id}}">
+                    <button type="submit" class="ui green button right floated">Comment</button>
             </form>
 
         </div>
-
+        <br>
+        {% endfor %}
     </div>
+    <div class="five wide column">
+        <div class="ui raised segment">
+            <h3 class="ui header">Create a Post</h3>
+            <hr>
+            <form action="{% url 'create-post' %}" method="post" enctype="multipart/form-data" class="ui form">
+                {% csrf_token %}
+                <strong>Image:</strong>{{new_post_form.image}}
+                <br><br>
+                <strong>Content:</strong>{{new_post_form.content}}
+                <br><br>
+                <hr>
+                <button type="submit" class="ui secondary inverted button">Post</button>
+            </form>
+        </div>
+    </div>
+</div>
 
+<br><br>
 
 {% endblock content %}
 
@@ -154,13 +118,13 @@ Posts
             comment_box = document.getElementById('comment-box');
             if (comment_box.style.display == "none")
             {
-                comment_box.style.display = "";
-<!--                button.text('Hide comments');-->
+                comment_box.style.display = "block";
+                button.innerHTML = 'Hide comments';
             }
             else <!-- if (comment_box.style.display == "block") -->
             {
                 comment_box.style.display = "none";
-<!--                button.text('Show comments');-->
+                button.innerHTML = 'Show comments';
             }
         });
 
