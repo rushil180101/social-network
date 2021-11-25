@@ -8,6 +8,83 @@ Posts
 
 {% block content %}
 
+<div class="ui grid centered" xmlns="http://www.w3.org/1999/html">
+    <div class="seven wide column">
+        {% for post in posts_qs %}
+        <div class="ui raised segment">
+            <div class="ui grid">
+                <div class="eleven wide column">
+                    <p class="ui small header">{{post.author}}</p>
+                    <p class="extra content">{{post.created|timesince}} ago</p>
+                </div>
+                <div class="five wide column">
+                    {% ifequal request.user post.author.user %}
+                    <a href="{% url 'update-post' post.pk %}" class="ui primary button">Edit</a>&nbsp;&nbsp;
+                    <a href="{% url 'delete-post' post.pk %}" class="ui secondary button">Delete</a>&nbsp;&nbsp;
+                {% endifequal %}
+                </div>
+            </div>
+            <hr>
+            {% if post.image %}
+            <img src="{{post.image.url}}" class="ui medium image centered">
+            <hr>
+            {% endif %}
+            <p class="ui small header">{{post.content}}</p>
+            <div class="ui grid">
+                <div class="nine wide column">
+                    <p>
+                        Likes: <span class="like-unlike-count-{{post.id}}">{{post.likes}}</span>, &nbsp;
+                        Comments: {{post.num_of_comments}}
+                    </p>
+                </div>
+                <div class="seven wide column">
+
+                    {% if post.comment_set.exists %}
+                    <button class="ui primary small button right floated" id="comments-toggle-btn">Show comments</button>
+                    {% endif %}
+
+                    <div class="right floated" style="float:right;">
+                        <form method="post" action="{% url 'like-unlike-post' %}" class="like-unlike-form" id="{{post.id}}">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{post.id}}">
+
+                            <button type="submit" class="ui small button like-unlike-btn-{{post.id}}">
+                                {% if profile not in post.liked_by.all %}
+                                <i class="thumbs up icon"></i>
+                                Like
+                                {% else %}
+                                <i class="thumbs down icon"></i>
+                                Unlike
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {% if post.comment_set.exists %}
+            <div id="comment-box">
+                <hr>
+                <p><strong> &nbsp; Comments</strong></p>
+                    <div class="ui segments">
+                    {% for comment in post.comment_set.all %}
+                        <div class="ui segment">
+                            <p><strong>{{comment.user}}</strong>
+                                <i class="caret right icon"></i>
+                                {{comment.body}}</p>
+                        </div>
+                    {% endfor %}
+                    </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="five wide column">
+        <div class="ui raised segment"></div>
+    </div>
+</div>
+
 <div class="row" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
         <div class="col-md-8">
 
@@ -37,21 +114,7 @@ Posts
 
                 Total likes: <div class="like-unlike-count-{{post.id}}">{{post.likes}}</div>
 
-                {% if post.comment_set.exists %}
-                <button class="btn btn-secondary" id="comments-toggle-btn">Show/Hide comments</button>
-<!--                <div class="row" style="border:solid black 1px;">-->
-<!--                    <div id="comment-box" class="col-md-4">-->
-                    <section id="comment-box" style="display:none">
-                    <h4>Comments</h4>
 
-                        {% for comment in post.comment_set.all %}
-                            <p><strong>{{comment.user}}</strong> ---> {{comment.body}}</p><br>
-                        {% endfor %}
-
-                    {% endif %}
-                    </section>
-<!--                    </div>-->
-<!--                </div>-->
 
 
                 <form action="{% url 'submit-new-comment' %}" method="post">
@@ -91,11 +154,13 @@ Posts
             comment_box = document.getElementById('comment-box');
             if (comment_box.style.display == "none")
             {
-                comment_box.style.display = "block";
+                comment_box.style.display = "";
+<!--                button.text('Hide comments');-->
             }
             else <!-- if (comment_box.style.display == "block") -->
             {
-                comment_box.style.display = "none"
+                comment_box.style.display = "none";
+<!--                button.text('Show comments');-->
             }
         });
 
