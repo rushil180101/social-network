@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Login
+{% endblock %}
+
+
+{% block content %}
+
+<div class="ui raised segment" style="width:55%; margin:auto;">
+  <h2 class="ui header">Login</h2>
+  <hr>
+  {% for message in messages %}
+  <div class="ui success message">
+    <div class="header">
+      {{message}}
+    </div>
+  </div>
+  <hr>
+  {% endfor %}
+  <form method="post" action="" class="ui form">
+    {% csrf_token %}
+    Username:
+    <input type="text" name="username">
+
+    Password:
+    <input type="password" name="password">
+    <hr>
+    <button type="submit" class="ui secondary inverted large button">Login</button>
+  </form>
+</div>
+<br><br>
+
+{% endblock %}
+
+
+{% block scripts %}
+{% endblock %}

@@ -16,8 +16,10 @@ Home
       <h1 class="ui inverted header">
         The-Social-Network
       </h1>
-      <h2>Not that movie, but a project  &nbsp; <i class="smile outline icon"></i></h2>
-      <div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
+      <h2>Not that Mark Zuckerberg movie, but a project  &nbsp; <i class="smile outline icon"></i></h2>
+      {% if request.user.is_anonymous %}
+      <a href="{% url 'sign-up' %}" class="ui huge primary button">Get Started <i class="right arrow icon"></i></a>
+      {% endif %}
       <br><br>
       <p>Scroll down for more info ...</p>
     </div>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Sign up
+{% endblock %}
+
+
+{% block content %}
+
+<div class="ui raised segment" style="width:65%; margin:auto;">
+  <h2 class="ui header">Sign Up Form</h2>
+  <hr>
+  {% if form.errors %}
+  {{form.errors}}
+  {% endif %}
+  <form method="post" action="" class="ui form">
+    {% csrf_token %}
+    {{form.as_p}}
+    <hr>
+    <button type="submit" class="ui green inverted large button">Submit</button>
+  </form>
+</div>
+<br><br>
+
+{% endblock %}
+
+
+{% block scripts %}
+{% endblock %}

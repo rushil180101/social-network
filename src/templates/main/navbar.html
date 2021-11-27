@@ -1,7 +1,7 @@
 
 <div class="ui inverted segment">
   <div class="ui inverted secondary large menu">
-    <a class="active item">
+    <a class="active item" href="{% url 'home-page' %}">
       Home
     </a>
     {% if request.user.is_anonymous %}
@@ -9,10 +9,10 @@
       About
     </a>
     {% else %}
-    <a class="active item">
-      Feed
+    <a class="active item" href="{% url 'main-posts-view' %}">
+      Posts
     </a>
-    <a class="active item">
+    <a class="active item" href="{% url 'my-profile' %}">
       My profile
     </a>
     {% endif %}
@@ -20,17 +20,17 @@
     <div class="right menu">
       {% if request.user.is_anonymous %}
       <div class="item">
-          <div class="ui primary button">Sign Up</div>
+          <a href="{% url 'sign-up' %}" class="ui primary button">Sign Up</a>
       </div>
       <div class="item">
-          <div class="ui grey button">Login</div>
+          <a href="{% url 'login' %}" class="ui grey button">Login</a>
       </div>
       {% else %}
       <div class="item">
         <b>Hi, {{user}}</b>
       </div>
       <div class="item">
-          <div class="ui primary button">Logout</div>
+          <a href="{% url 'logout' %}" class="ui primary button">Logout</a>
       </div>
       {% endif %}
     </div>
