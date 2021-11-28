@@ -115,6 +115,8 @@ Profile Details
     <h1 class="ui header centered">{{profile.user}}'s posts</h1>
     <hr>
 
+    {% if len_posts %}
+
     <div class="ui link cards" style="margin:auto">
 
         {% for post in posts %}
@@ -148,6 +150,11 @@ Profile Details
         {% endfor %}
 
 </div>
+
+    {% else %}
+    <p class="ui message" style="text-align:center;">{{profile.user}} has not posted anything yet.</p>
+
+    {% endif %}
 
 </div>
 

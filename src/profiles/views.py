@@ -20,6 +20,7 @@ def my_profile(request):
         instance=logged_in_user_profile
     )
 
+    zero_posts = True if logged_in_user_profile.get_posts_count() <= 0 else False
     if request.method == 'POST':
         if profile_update_form.is_valid():
             profile_update_form.save()
@@ -29,6 +30,7 @@ def my_profile(request):
     context = {
         'profile': logged_in_user_profile,
         'profile_update_form': profile_update_form,
+        'zero_posts': zero_posts,
     }
     return render(request, 'profiles/myprofile.html', context)
 
@@ -38,8 +40,10 @@ def received_invitations_view(request):
     logged_in_user_profile = Profile.objects.get(user=request.user)
     received_invitations_qs = Relationship.objects.invitations_received(logged_in_user_profile)
     senders = [invitation.sender for invitation in list(received_invitations_qs)]
+    zero_received_requests = True if len(senders) == 0 else False
     context = {
         'senders': senders,
+        'zero_received_requests': zero_received_requests,
     }
     return render(request, 'profiles/received_invites.html', context)
 
@@ -48,8 +52,10 @@ def received_invitations_view(request):
 def friends_list(request):
     logged_in_user_profile = Profile.objects.get(user=request.user)
     friends_profiles = [Profile.objects.get(user=i) for i in list(logged_in_user_profile.friends.all())]
+    zero_friends = True if len(friends_profiles) == 0 else False
     context = {
         'friends_profiles': friends_profiles,
+        'zero_friends': zero_friends,
     }
     return render(request, 'profiles/friends_list.html', context)
 
@@ -59,8 +65,10 @@ def pending_requests(request):
     logged_in_user_profile = Profile.objects.get(user=request.user)
     sent_invitation_requests = Relationship.objects.invitations_sent(logged_in_user_profile)
     profiles = [invitation_request.receiver for invitation_request in sent_invitation_requests]
+    zero_pending_requests = True if len(profiles) == 0 else False
     context = {
         'profiles': profiles,
+        'zero_pending_requests': zero_pending_requests,
     }
     return render(request, 'profiles/pending_requests.html', context)
 

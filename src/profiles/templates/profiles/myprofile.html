@@ -69,6 +69,10 @@ My Profile
     <h1 class="ui header centered">My posts</h1>
     <hr>
 
+    {% if zero_posts %}
+    <p class="ui message" style="text-align:center;">You have not posted anything yet.</p>
+    {% else %}
+
     <div class="ui link cards" style="margin:auto">
 
         {% for post in profile.get_posts %}
@@ -102,6 +106,7 @@ My Profile
         {% endfor %}
 
 </div>
+    {% endif %}
 
 </div>
 

@@ -23,6 +23,11 @@ My Friends
     </div>
     <hr>
 
+    {% if zero_friends %}
+    <p class="ui message">You don't have any friends yet. Go to "Other people" section to send friend requests to people.</p>
+    <a class="ui primary button" href="{% url 'available-profiles-to-invite' %}">Other people</a>
+    {% else %}
+
     <div class="ui link cards" style="margin:auto">
 
         {% for profile in friends_profiles %}
@@ -59,9 +64,10 @@ My Friends
         {% endfor %}
 
 </div>
+    {% endif %}
 
 </div>
-
+<br><br>
 {% endblock content %}
 
 {% block scripts %}

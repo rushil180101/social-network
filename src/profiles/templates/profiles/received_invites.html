@@ -23,6 +23,11 @@ Received Requests
     </div>
     <hr>
 
+    {% if zero_received_requests %}
+    <p class="ui message">You do not have any pending friend request received from anyone. Go to "Other people" section to send friend requests to people.</p>
+    <a class="ui primary button" href="{% url 'available-profiles-to-invite' %}">Other people</a>
+    {% else %}
+
     <div class="ui link cards" style="margin:auto">
 
         {% for sender in senders %}
@@ -69,9 +74,10 @@ Received Requests
         {% endfor %}
 
 </div>
+    {% endif %}
 
 </div>
-
+<br><br>
 {% endblock content %}
 
 {% block scripts %}

@@ -17,6 +17,7 @@ def all_posts_view(request):
     user_profiles = list(logged_in_user_profile.get_friends())
     user_profiles.append(logged_in_user_profile.user)
     posts_qs = [post for post in Post.objects.all() if post.author.user in user_profiles]
+    zero_posts = True if len(posts_qs) == 0 else False
 
     # Form for creating new post by the logged in user.
     new_post_form = PostModelForm()
@@ -29,6 +30,7 @@ def all_posts_view(request):
         'profile': logged_in_user_profile,
         'new_post_form': new_post_form,
         'new_comment_form': new_comment_form,
+        'zero_posts': zero_posts,
     }
     return render(request, 'posts/main.html', context)
 

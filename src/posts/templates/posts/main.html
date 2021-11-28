@@ -10,6 +10,11 @@ Posts
 
 <div class="ui grid centered" xmlns="http://www.w3.org/1999/html">
     <div class="seven wide column">
+        {% if zero_posts %}
+        <div class="ui raised segment">
+            <h3 class="ui header center aligned">Nothing has been posted yet. Connect with more people or create your own posts to see them here in the feed.</h3>
+        </div>
+        {% else %}
         {% for post in posts_qs %}
         <div class="ui raised segment">
             <div class="ui grid">
@@ -87,6 +92,8 @@ Posts
         </div>
         <br>
         {% endfor %}
+        {% endif %}
+        <br>
     </div>
     <div class="five wide column">
         <div class="ui raised segment">

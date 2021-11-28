@@ -5,9 +5,7 @@
       Home
     </a>
     {% if request.user.is_anonymous %}
-    <a class="active item">
-      About
-    </a>
+
     {% else %}
     <a class="active item" href="{% url 'main-posts-view' %}">
       Posts

@@ -126,7 +126,6 @@ class Relationship(models.Model):
     receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='receiver')
     status_choices = (
         ('sent', 'sent'),
-        ('accepted', 'accepted'),
     )
     status = models.CharField(max_length=10, choices=status_choices)
     updated = models.DateTimeField(auto_now=True)
