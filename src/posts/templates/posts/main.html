@@ -128,7 +128,7 @@ Posts
                 comment_box.style.display = "block";
                 button.innerHTML = 'Hide comments';
             }
-            else <!-- if (comment_box.style.display == "block") -->
+            else
             {
                 comment_box.style.display = "none";
                 button.innerHTML = 'Show comments';
@@ -152,6 +152,7 @@ Posts
             let result;
             const raw_likes_count = $(`.like-unlike-count-${post_id}`).text()
             const likes_count = parseInt(raw_likes_count)
+
 
             // Ajax part - Initial part of ajax code below sends the request and data
             // to the function defined in views.py, i.e., the server. Then the later
