@@ -4,15 +4,27 @@ This project aims at building a clone of a social networking site like Instagram
 # Tech Stack
 - Python
 - Django
-- HTML, CSS, Javascript
+- HTML, CSS, Javascript, Ajax, jQuery
+- PostgreSQL
+- Semantic-UI
+
+# Features
+- Create and share posts.
+- Connect with people via friend requests.
 
 # Status
 This project is under development.
 
-Following things have been completed as shown in the video.
+## Upcoming features
+- Chat
+- Search people
+- Photo tagging
 
+# How to execute this project ?
+Steps will be added soon along with requirements.txt.
 
+#
 
+Demo video shown below.
 
-https://user-images.githubusercontent.com/61351244/143420071-f09e51a9-f65b-45e4-b9a8-16930f8010ce.mp4
 

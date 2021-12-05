@@ -121,19 +121,21 @@ Posts
 <script>
     $(document).ready(function() {
         button = document.getElementById('comments-toggle-btn');
-        button.addEventListener("click", function () {
-            comment_box = document.getElementById('comment-box');
-            if (comment_box.style.display == "none")
-            {
-                comment_box.style.display = "block";
-                button.innerHTML = 'Hide comments';
-            }
-            else
-            {
-                comment_box.style.display = "none";
-                button.innerHTML = 'Show comments';
-            }
-        });
+        if (button) {
+            button.addEventListener("click", function () {
+                comment_box = document.getElementById('comment-box');
+                if (comment_box.style.display == "none")
+                {
+                    comment_box.style.display = "block";
+                    button.innerHTML = 'Hide comments';
+                }
+                else
+                {
+                    comment_box.style.display = "none";
+                    button.innerHTML = 'Show comments';
+                }
+            });
+        }
 
         $('.like-unlike-form').submit(function(e) {
             e.preventDefault()
