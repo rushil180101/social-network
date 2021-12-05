@@ -17,14 +17,17 @@ This project is under development.
 
 ## Upcoming features
 - Chat
+- Stories
 - Search people
 - Photo tagging
-
-# How to execute this project ?
-Steps will be added soon along with requirements.txt.
 
 #
 
 Demo video shown below.
 
+
+
+
+
+https://user-images.githubusercontent.com/61351244/144738539-3371e35c-63e9-48a9-8ab8-e24767e9166b.mp4
 
